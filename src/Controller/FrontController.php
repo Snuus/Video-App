@@ -2,9 +2,12 @@
 
 namespace App\Controller;
 
-use App\Entity\Category;
+
+use App\Utils\CategoryTreeFrontPage;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Entity\Category;
+
 
 class FrontController extends AbstractController
 {
@@ -19,8 +22,11 @@ class FrontController extends AbstractController
     /**
      * @Route("/video-list/category/{categoryname},{id}", name="video_list")
      */
-    public function videoList()
+    public function videoList($id, CategoryTreeFrontPage $categories)
     {
+
+        $subcategories =  $categories->buildTree($id);
+        dump($subcategories);
         return $this->render('front/video_list.html.twig');
     }
 
@@ -32,7 +38,6 @@ class FrontController extends AbstractController
         return $this->render('front/video_details.html.twig');
     }
 
-
     /**
      * @Route("/search-results", methods={"POST"}, name="search_results")
      */
@@ -41,9 +46,8 @@ class FrontController extends AbstractController
         return $this->render('front/search_results.html.twig');
     }
 
-
     /**
-     * @Route("/pricing",  name="pricing")
+     * @Route("/pricing", name="pricing")
      */
     public function pricing()
     {
@@ -51,7 +55,7 @@ class FrontController extends AbstractController
     }
 
     /**
-     * @Route("/register",  name="register")
+     * @Route("/register", name="register")
      */
     public function register()
     {
@@ -59,7 +63,7 @@ class FrontController extends AbstractController
     }
 
     /**
-     * @Route("/login",  name="login")
+     * @Route("/login", name="login")
      */
     public function login()
     {
@@ -67,7 +71,7 @@ class FrontController extends AbstractController
     }
 
     /**
-     * @Route("/payment",  name="payment")
+     * @Route("/payment", name="payment")
      */
     public function payment()
     {
@@ -79,7 +83,8 @@ class FrontController extends AbstractController
         $categories = $this->getDoctrine()
             ->getRepository(Category::class)
             ->findBy(['parent'=>null], ['name'=>'ASC']);
-        return $this->render('front/_main_categories.html.twig', ['categories'=>$categories]);
+        return $this->render('front/_main_categories.html.twig',[
+            'categories'=>$categories
+        ]);
     }
-
 }
