@@ -11,7 +11,7 @@ abstract class CategoryTreeAbstract
 {
 
     public $categoriesArrayFromDb;
-
+    public $categoryLst;
     protected static $dbconnection;
 
 
